@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>IDE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.11/ace.js"></script>
+<style>
+html, body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	cursor: url("/storage/emulated/0/8BitPainter/html.png");
+}
+
+#editor {
+	height: 100%;
+	width: 100%;
+	display: inline-block;
+	font-family: "Source Code Pro"
+}
+
+#iframe {
+	height: 100%;
+	width: 100%;
+	display: none;
+}
+
+#container {
+	width: auto;
+	height: 100%;
+	ovetflow: hidden;
+	white-space: nowrap;
+}
+
+button#run {
+	position: absolute;
+	top: 10px;
+	left: 350px;
+	border: none;
+	background: none;
+	color: white;
+}
+
+button#back {
+	position: absolute;
+	top: 10px;
+	left: 400px;
+	border: none;
+	background: none;
+	color: white;
+}
+</style>
+</head>
+<body onload="ready()">
+<div id="container">
+	<div id="editor"></div>
+	<iframe id="iframe" frameBorder="0"></iframe>
+</div>
+<button onclick="runEdit()" id="run">Run</button>
+<button onclick="backEdit()" id="back">Back</button>
+<script>
+function runEdit() {
+	var editorEdit = document.getElementById("editor");
+	var viewerView = document.getElementById("iframe");
+	var run = document.getElementById("run");
+	var back = document.getElementById("back");
+	
+	editorEdit.style.display = "none";
+	viewerView.style.display = "inline-block";
+	run.style.color = "black";
+	back.style.color = "black";
+}
+
+function backEdit() {
+	var editorEdit = document.getElementById("editor");
+	var viewerView = document.getElementById("iframe");
+	var run = document.getElementById("run");
+	var back = document.getElementById("back");
+	
+	editorEdit.style.display = "inline-block";
+	viewerView.style.display = "none";
+	run.style.color = "white";
+	back.style.color = "white";
+}
+
+function update() {
+	var idoc = document.getElementById("iframe").contentWindow.document;
+	idoc.open();
+	idoc.write(editor.getValue());
+	idoc.close();
+}
+
+function setupEditor() {
+	window.editor = ace.edit("editor");
+	editor.setTheme("ace/theme/monokai");
+	editor.getSession().setMode("ace/mode/html");
+	editor.setValue(`<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8">
+	
+</head>
+<body>
+	
+</body>
+</html>`,1);
+	editor.getSession().on("change", function() {
+		update();
+	});
+	
+	editor.focus();
+	editor.setOptions({
+		fontSize: "7.5pt",
+		showLineNumbers: true,
+		showGutter: true,
+		vScrollBarAlwaysVisible: true,
+		enableBasicAutocompletion: true,
+		enableLiveAutocompletion: false
+	});
+	
+	editor.setShowPrintMargin(true);
+	editor.setBehavioursEnabled(true);
+}
+function ready() {
+	setupEditor();
+	update();
+}
+</script>
+</body>
+</html>
